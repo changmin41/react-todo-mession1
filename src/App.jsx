@@ -8,6 +8,7 @@ function App() {
         e.preventDefault() //새로고침 방지
         console.log(e.target.todo.value) //입력한 value값을 콘솔에 출력
         setTodos([...todos, e.target.todo.value]) //todos 배열에 input의 value값을 추가
+        e.target.todo.value = '' // 입력창 지우기
         return
     }
 
