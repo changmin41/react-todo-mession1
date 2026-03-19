@@ -1,4 +1,6 @@
-import { useState, useRef, useEffect } from 'react'
+import { useTodos } from './hooks/useTodos'
+import TodoList from './components/TodoList'
+
 /**
  *
  * 할일 등록과 삭제 기능이 있는 간단한 투두리스트 앱입니다.
@@ -7,37 +9,9 @@ import { useState, useRef, useEffect } from 'react'
  * - 할일 삭제, 초기 로드(앱 실행 시 localStorage에서 데이터 불러오기)
  * - 완료 체크
  */
-const storage = window.localStorage
-
-const setItem = (key, value) => {
-    try {
-        // 저장할 때는 항상 문자열로 바꿔서 저장해야 합니다.
-        storage.setItem(key, JSON.stringify(value))
-    } catch (e) {
-        console.log(e)
-    }
-}
-
-const getItem = (key, defaultValue) => {
-    try {
-        const storedValue = storage.getItem(key)
-        if (storedValue) {
-            return JSON.parse(storedValue)
-        }
-        return defaultValue
-    } catch (e) {
-        console.log(e)
-        return defaultValue
-    }
-}
 
 function App() {
-    const [todos, setTodos] = useState(getItem('my-todos', []))
-    let lastId = useRef(1) //id값이 1부터 시작
-    //스토리지에서 데이터 불러오기
-    useEffect(() => {
-        setItem('my-todos', todos)
-    }, [todos])
+    const { todos, setTodos, lastId, deleteTodo, toggleTodo } = useTodos()
 
     //할일 등록 함수
     function addTodo(e) {
@@ -58,17 +32,6 @@ function App() {
         return
     }
 
-    //할일 삭제 함수
-    function deleteTodo(selectedId) {
-        const nextState = todos.filter((item) => item.id !== selectedId)
-        setTodos(nextState)
-    }
-    //할일 체크 함수
-    function toggleTodo(selectedId) {
-        const nextState = todos.map((item) => (item.id === selectedId ? { ...item, completed: !item.completed } : item))
-        setTodos(nextState)
-    }
-
     return (
         <>
             {' '}
@@ -78,16 +41,7 @@ function App() {
                 <button type="submit">추가</button>
             </form>
             {/*토글, 내용, 삭제 버튼*/}
-            <ul>
-                {todos.map((item) => (
-                    <li key={item.id}>
-                        {JSON.stringify(item.completed)}
-                        <input type="checkbox" checked={item.completed} onChange={() => toggleTodo(item.id)} />
-                        {item.id},{item.todo}
-                        <button onClick={() => deleteTodo(item.id)}>삭제</button>
-                    </li> //key 값으로 오류 해결, 화살표 함수로 deleteTodo함수에 i값 전달
-                ))}
-            </ul>
+            <TodoList todos={todos} toggleTodo={toggleTodo} deleteTodo={deleteTodo} />
         </>
     )
 }
