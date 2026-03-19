@@ -1,9 +1,16 @@
 import { useState } from 'react'
 
 function App() {
-    const [count, setCount] = useState(0)
-
-    return <> 메인페이지 입니다.</>
+    const [todos, setTodos] = useState(['할일1', '할일2', '할일3'])
+    return (
+        <>
+            <ul>
+                {todos.map((item, i) => (
+                    <li> {item} </li>
+                ))}
+            </ul>
+        </>
+    )
 }
 
 export default App
