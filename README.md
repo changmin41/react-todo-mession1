@@ -31,3 +31,5 @@ src/
 ├── App.jsx              # 전체 레이아웃 및 입력 폼 구성
 └── main.jsx             # 앱 엔트리 포인트
 ```
+
+![alt text](image.png)
